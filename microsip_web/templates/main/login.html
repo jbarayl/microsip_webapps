@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block js_code %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#id_username").focus();
+
+  $("#id_username").bind('keyup', function (e) {
+      if (e.which >= 97 && e.which <= 122) {
+          var newKey = e.which - 32;
+          // I have tried setting those
+          e.keyCode = newKey;
+          e.charCode = newKey;
+      }
+
+      $("#id_username").val(($("#id_username").val()).toUpperCase());
+  });
+});
+</script>    
+
+{% endblock %}
+{% block content %}
+	<header>
+    <br>
+	  <h1 class="text-center hidden-phone">Iniciar Sesión</h1>
+    <br>
+</header>
+<form id='formulario' action="/login/" method="post">{% csrf_token %}
+	<div style="margin: 0 auto 0 auto; display: block; width: 290px;">
+   {{ form.errors }} 
+	<span class="span3" style="text-align:left;">
+      {{ form.conexion_db }}
+      <br>
+  		Usuario:<br>
+  		{{ form.username }}
+  	</span>
+	<span class="span3" style="clear:both; text-align:left;">
+  		Contraseña:<br>
+  		{{ form.password }} 
+      <input class="btn" type="submit" value="Ingresar" />
+  	</span>
+  </div>
+</form>
+<p style="color:red;">{{ message }}</p>
+<br><br>
+      <br><br><br><br><br>
+<br><br><br><br><br>	
+{% endblock %}

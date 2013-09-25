@@ -1,0 +1,6 @@
+Django==1.5.2
+django-autocomplete_light==1.1.30
+fdb==1.4
+django-dajaxice==0.5.5
+xlrd==0.8.0
+django-mobi
