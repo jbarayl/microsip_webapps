@@ -19,6 +19,7 @@ git checkout
 git pull origin master
 git gc
 python manage.py syncdb --no-initial-data
+no
 
 
 
