@@ -18,7 +18,7 @@ git clean -df
 git checkout
 git pull origin master
 git gc
-python manage.py syncdb --no-inital-data
+python manage.py syncdb --no-initial-data
 
 
 
