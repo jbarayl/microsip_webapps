@@ -132,6 +132,7 @@ Desktop.ini
 #############
 
 #*.py[co]
+_SYNCAPP/
 microsip_web/apps/**/*.py
 microsip_web/libs/**/*.py
 microsip_web/urls/*.py
