@@ -12,6 +12,18 @@
 
 
 <script type="text/javascript">
+  function sincronizar_inventario()
+  {
+    $('#id_sincronizar_btns').hide();
+    $("#id_sincronizando_span").show();
+    Dajaxice.microsip_web.apps.inventarios.sincronizar_inventario(mostrar_articulos_sincronizados,{'inventariofisico_id': {{ inventario_id }},}); 
+  }
+
+  function mostrar_articulos_sincronizados(data)
+  {
+    alert("Se syncronizaron " + data.articulos_count + "Articulo.");
+    window.location = "/inventarios/inventariofisico/{{ inventario_id }}/";
+  }
 
   function agregar_articulos_porlineafn()
   {
@@ -41,7 +53,7 @@
     else
       alert('No hay articulos por inicializar');
     
-    window.location = "/inventarios/InventarioFisico_pa/{{ inventario_id }}/";
+    window.location = "/inventarios/inventariofisico/{{ inventario_id }}/";
   }
   
   
@@ -224,14 +236,43 @@
 
 
 {% endblock %}
-{% block breadcrumb %}{{ block.super }} <a href="/inventarios/InventariosFisicos/">Inventarios Fisico</a> <i class=" icon-play"></i>Inventario Fisico a apuerta abierta {% endblock %}
+
+{% block breadcrumb %}{{ block.super }} <a href="/inventarios/inventariosfisicos/">Inventarios Fisico</a> <i class=" icon-play"></i>Inventario Fisico a apuerta abierta {% endblock %}
 {% block content %}
 <div id="modal_cargando" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <p class="text-center">Agregando articulos, Por favor espera.</p>
     <img class= 'imagecenter' src="{{STATIC_URL}}img\ajax-loader.gif">  
     <br>
 </div>
-<form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>
+<div id="modal_seguro_sync" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header ">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <p><h3>Sincronizar inventario con movimientos</h3></p>
+  </div>
+  <div class="modal-body">
+    <p>
+      Al sincronizar inventario con movimientos se sincronizaran todos los movimientos realizados de entradas y salidas en microsip con las entradas ya registradas en este inventario
+    </p>
+    <p>Ejemplo</p>
+    <blockquote>
+      <p><small>Se capturaron 5 articulos en inventarios pero se realizo la venta de 2 como resultado se tendra 3 articulos en inventario.</small></p>
+    </blockquote>
+    <p class="text-warning">
+        Esto pueder tardar unos minutos dependiendo del numero de articulos en la base de datos.
+    </p>  
+  </div>
+  <div class="modal-footer">
+    <span id='id_sincronizando_span' class='hide'>
+      <label class="span">Sincronizando </label>
+      <img class= 'imagecenter' src="{{STATIC_URL}}img\ajax-loader.gif">
+    </span>
+    <span id="id_sincronizar_btns">
+      <button class="btn" id='btnCancel' data-dismiss="modal">Cancelar</button>
+      <a onclick='sincronizar_inventario()' href="#" class="btn"> Aceptar</a>
+    </span>
+  </div>
+</div>
+<form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>{% csrf_token %}
   {% if message %}
   <div class="alert alert-block alert-error fade in">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -249,6 +290,8 @@
               <ul class="dropdown-menu" role="menu" aria-labelledby="drop1" style='text-align:left;'>
                 <li><a tabindex="-1" href="#articulosnocont_porlinea_Modal" role="button" data-toggle="modal"><i class="icon-tasks"></i> Agregar articulos no contabilizados Por linea</a></li>
                 <li><a tabindex="-1" href="#" onclick="agregar_articulosfn()"><i class="icon-align-justify"></i> Agregar todos los articulos no contabilizados</a></li>
+                <!-- <li class='divider'></li>
+                <li><a tabindex="-1" href="#modal_seguro_sync" role="button" data-toggle="modal"><i class="icon-refresh"></i> Sincronizar con entradas y salidas</a></li> -->
               </ul>
             </li>
           </ul>
@@ -280,7 +323,7 @@
       </div>  
     </div>
   </div>
-  {% csrf_token %}
+  
    <div id="articulosnocont_porlinea_Modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     
     <div class="modal-header">
@@ -397,6 +440,7 @@
       <th class="hidden-phone">Clave</th>
       <th>Articulo</th>
       <th>Unidades</th>
+      <!-- <th>Movimientos</th> -->
       <th></th>
     </tr>
     {% for detalle in detallesInventario %}
@@ -404,7 +448,8 @@
       <td class="hidden-phone"> {{ detalle.clave }} </td>
       <td> {{ detalle.articulo }} </td>
       <td> {{ detalle.unidades }} </td>
-      <td> <input type="hidden" name="detalle_id" value="{{ detalle.id }}"> <a href="#" class='btn btn-mini btn-info-inventario'> <i class="icon-info-sign"></i> </a> </td>
+      <!-- <td> {{ detalle.unidades_syn }} </td> -->
+      <td> <input type="hidden" name="detalle_id" value="{{ detalle.id }}"/> <a href="#" class='btn btn-mini btn-info-inventario'> <i class="icon-info-sign"></i> </a> </td>
     </tr>
     {% endfor %}
   </table>

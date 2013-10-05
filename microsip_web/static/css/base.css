@@ -12,6 +12,13 @@ body{
   background-color: rgb(231, 231, 231); 
 }
 
+p
+{
+  font-family: 'Arial', serif;
+}
+
+.money-text{color:#ffa500}
+
 .navbar-inner
 {
   border-radius: 0px;
@@ -160,6 +167,8 @@ footer
 {
   background-position: -4px -230px;
 }
+
+
 
 .pagecontent
 {
