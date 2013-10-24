@@ -1,0 +1,108 @@
+{% extends "inventarios/base.html" %}
+{% block title %}Inventario fisico{% endblock %}
+
+<!-- CSS Code -->
+{% block style_css %}
+<link rel='stylesheet' href='{{STATIC_URL}}css/inventarios.css'/>
+{% endblock %}
+
+<!-- JavaScript Code -->
+{% block js_code %}
+{% include 'autocomplete_light/static.html' %}
+<script src="{{STATIC_URL}}js/inventarios.ajustes.js" ></script>
+<script type="text/javascript">
+function limpiarForm()
+{
+  $("#id_unidades, #id_claveArticulo, #id_articulo_text").val('');
+  $("#span_alerta_unidades").html("");
+  $("#buscar_btn, .span_clave").show();
+  $(".span_unidades, #cancelar_btn").hide();
+  if ($("#chbx_modorapido").is(':checked'))
+  {
+    $(".span_articulo, #span_nombre_articulo").hide();
+    $(".span_clave").show();
+    $("#id_claveArticulo").focus();
+  }
+  else
+  {
+    if ( $("#id_articulo-deck").children().length != 0) 
+      deselecionarArticulo();
+
+    $(".span_clave").hide();
+    $(".span_articulo, #id_articulo_text, #span_nombre_articulo").show();
+    $("#id_articulo-text").focus();
+  }
+}
+
+$(document).ready(function(){
+  
+  $("#id_articulo_text").before("<span class='add-on' id='span_nombre_articulo'>Nombre</span>")
+  //limpiarForm();
+});
+
+</script>
+{% endblock %}
+
+{% block breadcrumb %}{% endblock %}
+{% block content %}
+<div id="modal_opciones-claves" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3 id="myModalLabel">Claves</h3>
+  </div>
+  <div class="modal-body">
+  </div>
+</div>
+<form method="post" class="form-horizontal" action="#">
+  <input type="hidden" id ="id_seguimiento" name="seguimiento" value="">
+  <div class="ms-custom-form collapse">
+    <div>
+      <div class='span all_screen' >
+        <label class="small_screen"> Ubicacion</label> 
+        <input class="input-small" id="id_ubicacion" name="ubicacion" placeholder="Ubicacion.." type="text">  
+        <input type="checkbox" id="chbx_modorapido" value="ham" onclick="" /><div class="small_screen" style="font-size: .8em;">Rapido</div>
+      </div>
+    </div>
+  </div>
+  <div id="span_details" class="small_screen_block">
+    <button type="button" class="btn btn-mini btn-navbar" data-toggle="collapse"  data-target=".ms-custom-form">
+      <i class="icon-arrow-down"></i>
+    </button>
+  </div>
+  {% csrf_token %}
+   
+  {{ form.errors }}
+
+  <div class="span span_clave" >
+    <div class="input-prepend input-append">
+      <span class="add-on ">Clave</span>
+      {{ form.claveArticulo }}
+    </div>
+  </div>
+  <div class="span span_articulo" >
+    <div class="input-prepend input-append">
+      {{ form.articulo }}
+    </div>
+    <span id='span_alerta_unidades' class="text-error" style=" background-color: rgb(255, 0, 0); color: white;"> </span>
+  </div>
+  <a id="buscar_btn" class= "btn btn-primary span12 " href="#" onclick="buscar_articulo()" ><i class="icon-search icon-white"></i> <br>Buscar</a>
+  <div class="span1 span_unidades" >
+    <div class="input-prepend input-append">
+      {{ form.unidades }}
+      {% if puede_modificar_costos %}
+        {{ form.costo_unitario }}
+      {% endif %} 
+      <a class="btn btn-success " id="enviar_btn" onclick="add_existenciasarticulo_byajuste()" href="#">Enviar</a>
+    </div>
+  </div>
+  <br>
+  <a id="cancelar_btn" class= "btn btn-danger span12 " href="#" onclick="limpiarForm();" >Cancelar</a>
+  <br style='clear:both;'>
+  <input type="hidden" id="almacen_nombre" value="{{ almacen.nombre }}"/>
+  <input type="hidden" id="entrada_id" value="{{ entrada_id }}"/>
+  <input type="hidden" id="salida_id" value="{{ salida_id }}"/>
+  <input type="hidden" id="almacen_id" value="{{ almacen_id }}"/>
+  <input type="hidden" id="puede_modificar_costos" value="{{ puede_modificar_costos }}"/>
+</form>
+
+{% endblock %}

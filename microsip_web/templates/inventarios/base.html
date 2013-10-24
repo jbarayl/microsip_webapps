@@ -31,23 +31,30 @@
 {% endblock %}
 {% block selected_module %}<a href="/inventarios/inventariosfisicos/"> <i class="msicon-inventarios"></i> <label class="small_screen"> Inventarios</label></a>{% endblock %}
 {% block btn_modulo_inventarios%}
-<li style='color: #555555; background-color: #e5e5e5;'><a href="/inventarios/inventariosfisicos/"> <i class="msicon-inventarios"></i> <label class='small_screen'> Inventarios</label></a> </li>
+<li style='color: #555555; background-color: #e5e5e5;'><a href="/inventarios/almacenes/"> <i class="msicon-inventarios"></i> <label class='small_screen'> Inventarios</label></a> </li>
 {% endblock %}
 {% block breadcrumb %}{{ block.super }}{% endblock %}
 {% block tools-module %}
 <div class="navbar navbar-static">
   <ul class="nav" role="navigation">
-    <li><a tabindex="-1" href="/inventarios/inventariosfisicos/"><i class="icon-folder-close"></i> <span class=""> Documentos</span></a></li>
+    <!-- <li><a tabindex="-1" href="/inventarios/inventariosfisicos/"><i class="icon-folder-close"></i> <span class=""> Documentos</span></a></li> -->
+    <li><a tabindex="-1" href="/inventarios/almacenes/"><i class="icon-hdd"></i> <span class="">Almacenes</span></a></li>
     <li><a tabindex="-1" href="/inventarios/articulos/"><i class="icon-barcode"></i> <span class="">Articulos</span></a></li>
+    <!-- <li class="dropdown">
+      <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-barcode"></i> Articulos <b class="caret"></b></a>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="drop1" style='text-align:left;'>    
+      </ul>
+    </li> -->
+    
   </ul>
-  <ul id="menu_ver" class="nav pull-right hidden-phone">
+  <!-- <ul id="menu_ver" class="nav pull-right hidden-phone">
     <li class="dropdown">
-      <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> <i class="icon-eye-open"></i> Ver <b class="caret"></b></a>
+      <a id="drop1" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"> Ver <b class="caret"></b></a>
       <ul class="dropdown-menu" role="menu" aria-labelledby="drop1" style='text-align:left;'>
         <li><a href="#"> <input type="checkbox" name="checkbox_mua" value="unit-in-group" /> Movimientos del usuario activo</a></li>
       </ul>
     </li>
-  </ul>
+  </ul> -->
 </div>
 {% endblock %}
 {% block content %}
