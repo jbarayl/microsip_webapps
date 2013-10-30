@@ -78,6 +78,7 @@ function mostrar_articulos_agregados(data)
 /* Modificar existencias */
 function add_existenciasarticulo_byajuste()
 {
+
   if ($('#id_ubicacion').val() == '')
   {
     alert("El campo ubicacion es obligatorio");
@@ -121,7 +122,7 @@ function add_existenciasarticulo_byajuste()
   { 
     var costo_unitario = 0;
     if ( $('#puede_modificar_costos').val() == 'True' )
-      costo_unitario = $("#id_costo_unitario").val()
+      costo_unitario = $("#id_costo_unitario").val();
     Dajaxice.microsip_web.apps.inventarios.add_existenciasarticulo_byajustes_view(resultado,{
       'ubicacion' : $("#id_ubicacion").val(),
       'articulo_id' : $("#id_articulo").val()[0],
@@ -131,8 +132,9 @@ function add_existenciasarticulo_byajuste()
       'detalle_costo_unitario' :costo_unitario,
       'entrada2_id' : $("#entrada2_id").val(),
       'salida2_id' : $("#salida2_id").val(),
-      }
-    ); 
+      'ajustar_primerconteo': $("#id_ajusteprimerconteo").attr('checked')== 'checked',
+      'is_mobile': $("#is_mobile").val(),
+      }); 
     
     $("#enviar_btn").attr("disabled",true);
     $("#enviar_btn").text("Enviando...");
@@ -156,21 +158,24 @@ function add_existenciasarticulo_byajuste()
 
 function resultado(data)
 {
-  if (data.is_mobile == false )
+  if ( $("#is_mobile").val() == 'False' )
     window.location = "/inventarios/inventariofisico/"+data.alamcen_id+"/";
   else
+  {
     limpiarForm();
+    $("#ultimo_conteo").html("<strong>Ultimo conteo</strong><br> "+data.articulo_nombre+"<br>Ex Acual. "+data.existencia_actual+"");
+  }
 }
 
 /* Mostrar articulo */
-function cargar_articulo( articulo_id, articulo_nombre, existencias, costo_ultima_compra, detalle_modificacionestime, ya_ajustado, detalle_modificacionestime_salidas, articulo_seguimiento )
+function cargar_articulo( articulo_id, articulo_nombre, existencias, costo_ultima_compra, detalle_modificacionestime, ya_ajustado, detalle_modificacionestime_salidas, articulo_seguimiento, articulo_linea )
 {
   $('#id_articulo-deck').attr('style','');
   $('#id_articulo-deck').html('<span class="div hilight" data-value="'+articulo_id+'"><span style="display: inline;" class="remove div">X</span>'+articulo_nombre+'</span>');
   $('#id_articulo').html('<option selected="selected" value="'+articulo_id+'"></option>');
   $('#id_articulo_text').hide();
   
-  cargar_detallesmovimientos_articulo( detalle_modificacionestime, detalle_modificacionestime_salidas, existencias, ya_ajustado, articulo_seguimiento );
+  cargar_detallesmovimientos_articulo( detalle_modificacionestime, detalle_modificacionestime_salidas, existencias, ya_ajustado, articulo_seguimiento, articulo_linea );
   
   $("#id_costo_unitario").val(costo_ultima_compra);
 
@@ -191,8 +196,9 @@ function cargar_articulo( articulo_id, articulo_nombre, existencias, costo_ultim
   $("#id_unidades").focus();
 }
 /* Mostrar articulo > detalles*/
-function cargar_detallesmovimientos_articulo(entradas_detalles, salidas_detalles, existencias, ya_ajustado, seguimiento)
+function cargar_detallesmovimientos_articulo(entradas_detalles, salidas_detalles, existencias, ya_ajustado, seguimiento, articulo_linea )
 {
+  $("#label_linea").html("<strong>Linea&nbsp;</strong>"+ articulo_linea);
   $(".span_clave").hide();
   $(".span_articulo, #span_nombre_articulo").show();
 
@@ -268,13 +274,14 @@ function mostrar_articulo_byclave(data)
   } 
   else
   {
-    cargar_articulo( data.articulo_id, data.articulo_nombre, data.existencias, data.costo_ultima_compra, data.detalle_modificacionestime, data.ya_ajustado, data.detalle_modificacionestime_salidas, data.articulo_seguimiento );
+    cargar_articulo( data.articulo_id, data.articulo_nombre, data.existencias, data.costo_ultima_compra, data.detalle_modificacionestime, data.ya_ajustado, data.detalle_modificacionestime_salidas, data.articulo_seguimiento, data.articulo_linea );
+
   }
 }
 
 function mostrar_articulo_byid(data) 
 {
-  cargar_detallesmovimientos_articulo( data.detalle_modificacionestime, data.detalle_modificacionestime_salidas, data.existencias, data.ya_ajustado , data.articulo_seguimiento);
+  cargar_detallesmovimientos_articulo( data.detalle_modificacionestime, data.detalle_modificacionestime_salidas, data.existencias, data.ya_ajustado , data.articulo_seguimiento, data.articulo_linea);
   $("#id_costo_unitario").val(data.costo_ultima_compra);
 
 }
@@ -282,6 +289,20 @@ function mostrar_articulo_byid(data)
 /* Otras funcionalidades */
 function load_localstorage()
 {
+  ajustar_primerconteo = localStorage.getItem("ajustar_primerconteo");
+  if (ajustar_primerconteo == false)
+    localStorage.setItem("ajustar_primerconteo", 'false');
+  
+
+  if( localStorage.getItem("ajustar_primerconteo") === 'true')
+    $("#id_ajusteprimerconteo").attr('checked', true);
+  else
+    $("#id_ajusteprimerconteo").attr('checked', false);
+
+  if( localStorage.getItem("ajustar_primerconteo") === true)
+    alert(localStorage.getItem("ajustar_primerconteo"));
+
+
   modo_rapido = localStorage.getItem("modo_rapido");
   if (modo_rapido == null)
     localStorage.setItem("modo_rapido", 'false');
@@ -361,7 +382,12 @@ $('#span_alerta_unidades, #span_ya_ajustado, #span_sin_ajustado').hide();
 if (Modernizr.localstorage) 
   load_localstorage();
 else
+{
   $("#chbx_modorapido").attr('checked', true);
+  $('#id_ajusteprimerconteo').attr("checked", false);
+}
+
+
 // modo_rapido_ajustes = localStorage.getItem("modo_rapido_ajustes");
 // if (modo_rapido_ajustes == null)
 //   localStorage.setItem("modo_rapido_ajustes", 'false');
@@ -377,7 +403,9 @@ else
 
 // });
 
-// $('#id_articulo_text').focusin(function(){
-//   if (localStorage.getItem("modo_rapido_ajustes") == 'true')
-//     localStorage.setItem("modo_rapido_ajustes", 'false');
-// });
+$('#id_ajusteprimerconteo').on("click", function(){
+  if ($('#id_ajusteprimerconteo').attr('checked') == 'checked')
+    localStorage.setItem("ajustar_primerconteo", 'true');
+  else
+    localStorage.setItem("ajustar_primerconteo", 'false');
+});
