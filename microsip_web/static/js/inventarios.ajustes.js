@@ -75,6 +75,58 @@ function mostrar_articulos_agregados(data)
   //   window.location = "/inventarios/inventariofisico/{{ inventario_id }}/" + localStorage.getItem("dua") + "/";
 }
 
+function add_series()
+{
+  var series='';
+  error =  0; 
+  $("input[id^='id_numeroserie']").each(function( index ) { 
+    if ($(this).val() == "" && error == 0)  
+    {
+      alert('por favor llena todos los campos')
+      error = 1;
+    }  
+    series = series + $(this).val()+',';
+  });
+
+  if (error == 1)
+    return;
+
+  
+  Dajaxice.microsip_web.apps.inventarios.add_seriesinventario_byarticulo(series_agregadas, 
+  {
+    'articulo_id': $("#id_articulo").val()[0], 
+    'almacen_id': $("#almacen_id").val(),
+    'series': series,
+    'entrada_id':  $("#entrada_id").val(),
+    'salida_id':  $("#salida_id").val(),
+    'ubicacion': $("#id_ubicacion").val(),
+    'unidades' : $("#id_unidades").val(),
+    'ajusteprimerconteo': $("#id_ajusteprimerconteo").attr('checked')== 'checked',
+  });
+}
+
+function series_agregadas(data)
+{
+  $("#add_seies_btn").attr("disabled",true);
+  $("#add_seies_btn").text("Enviando...");
+  
+  alert(data.msg);
+  if (data.error == false)
+  {
+    window.location = "/inventarios/inventariofisico/" + $( "#almacen_id" ).val() + "/";
+  }
+  else
+  {
+    $("#add_seies_btn").attr("disabled", false);
+    $("#add_seies_btn").text("Enviar");  
+  }
+}
+
+function cargar_series_actuales(data)
+{
+  $("#div_numeroserie_actuales").html(data.series);
+}
+
 /* Modificar existencias */
 function add_existenciasarticulo_byajuste()
 {
@@ -107,10 +159,15 @@ function add_existenciasarticulo_byajuste()
 
   if ( $("#articulo_seguimiento").val() == 'S' )
   {
+    Dajaxice.microsip_web.apps.inventarios.get_seriesinventario_byarticulo(cargar_series_actuales,{'articulo_id': $("#id_articulo").val()[0], 'almacen_id': $("#almacen_id").val(),});
     var inputs_html = ''
-    for ( x = 1; x <= $('#id_unidades').val() ; x++ )
+    var numero_series =  $('#id_unidades').val();
+    if (numero_series < 0)
+      numero_series = -numero_series 
+
+    for ( x = 1; x <= numero_series ; x++ )
     { 
-      inputs_html = inputs_html + "<input class='input-small' id='id_numeroserie_" + x + "' type='text'/> </br>";
+      inputs_html = inputs_html + "<input id='id_numeroserie_" + x + "' type='text'/> </br>";
     }   
     $("#table_numeros_serie > tbody").html(inputs_html);
     $("#modal_series").modal();
