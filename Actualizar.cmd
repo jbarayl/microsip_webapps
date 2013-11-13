@@ -11,7 +11,7 @@ echo.
 echo.
 
 git update-index --assume-unchanged microsip_web/settings/local_settings.py
-git reset --hard
+
 git pull origin master
 git gc
 python manage.py syncdb --no-initial-data
