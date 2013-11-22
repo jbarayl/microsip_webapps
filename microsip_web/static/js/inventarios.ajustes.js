@@ -145,6 +145,10 @@ function cargar_series_actuales(data)
 function add_existenciasarticulo_byajuste()
 {
 
+  if ( $("#enviar_btn").attr("disabled") == "disabled")
+    return false
+
+
   if ($('#id_ubicacion').val() == '')
   {
     alert("El campo ubicacion es obligatorio");
@@ -192,6 +196,9 @@ function add_existenciasarticulo_byajuste()
 
   if ( ( $('#puede_modificar_costos').val() == 'True'  && $('#id_costo_unitario').val() != '' && $.isNumeric($('#id_costo_unitario').val()) == true)  || ($('#puede_modificar_costos').val() == 'False') )
   { 
+    $("#enviar_btn").attr("disabled",true);
+    $("#enviar_btn").text("Enviando...");
+
     var costo_unitario = 0;
     if ( $('#puede_modificar_costos').val() == 'True' )
       costo_unitario = $("#id_costo_unitario").val();
@@ -204,12 +211,9 @@ function add_existenciasarticulo_byajuste()
       'detalle_costo_unitario' :costo_unitario,
       'entrada2_id' : $("#entrada2_id").val(),
       'salida2_id' : $("#salida2_id").val(),
-      'ajustar_primerconteo': $("#id_ajusteprimerconteo").attr('checked')== 'checked',
       'is_mobile': $("#is_mobile").val(),
       }); 
     
-    $("#enviar_btn").attr("disabled",true);
-    $("#enviar_btn").text("Enviando...");
   }
   else
   {
@@ -293,23 +297,32 @@ function cargar_detallesmovimientos_articulo(entradas_detalles, salidas_detalles
   var entradas = entradas_detalles.split(',');
   var salidas = salidas_detalles.split(',');
   
-  var detalles_html = '<h6> ENTRADAS: </h6>';
-  
+  var detalles_html = '';
+  var header_entradas = '';
+
   $.each(entradas, function(key, entrada) {
-    numero = key + 1;
-    if (entrada != "")
+    if ( entrada.toLowerCase().indexOf("existin") >= 0 )
+      header_entradas = '<h6> ENTRADAS: '+ entrada+'</H6>';
+    else if (entrada != "")
+    {
+      numero = key + 1;
       detalles_html = detalles_html + numero + ") " + entrada + '<br>';
+    }
   });
 
   detalles_html = detalles_html + '<h6> SALIDAS: </h6>';
   
   $.each(salidas, function(key, salida) {
-    numero = key + 1;
-    if (salida != "")
+    if ( salida.toLowerCase().indexOf("existin") >= 0 )
+      header_entradas = '<h6> ENTRADAS: '+ salida+'</H6>';
+    else if (salida != "")
+    {
+      numero = key + 1;
       detalles_html = detalles_html + numero + ") " + salida + '<br>';
+    }
   });
 
-  $("#modal_movimientos_articulo > .modal-body").html(detalles_html);  
+  $("#modal_movimientos_articulo > .modal-body").html(header_entradas + detalles_html);  
 }
 
 /* Buscar articulo */
@@ -360,20 +373,7 @@ function mostrar_articulo_byid(data)
 /* Otras funcionalidades */
 function load_localstorage()
 {
-  ajustar_primerconteo = localStorage.getItem("ajustar_primerconteo");
-  if (ajustar_primerconteo == false)
-    localStorage.setItem("ajustar_primerconteo", 'false');
-  
-
-  if( localStorage.getItem("ajustar_primerconteo") === 'true')
-    $("#id_ajusteprimerconteo").attr('checked', true);
-  else
-    $("#id_ajusteprimerconteo").attr('checked', false);
-
-  if( localStorage.getItem("ajustar_primerconteo") === true)
-    alert(localStorage.getItem("ajustar_primerconteo"));
-
-
+ 
   modo_rapido = localStorage.getItem("modo_rapido");
   if (modo_rapido == null)
     localStorage.setItem("modo_rapido", 'false');
@@ -408,12 +408,19 @@ function load_localstorage()
 
 function buscarClave()
 {
+  if ( $("#buscar_btn").attr("disabled") == "disabled")
+    return false
+  
   if( $("#id_claveArticulo").val() != '' )
+  {
+    $("#buscar_btn").attr("disabled",true);
+    $("#buscar_btn").text("Buscando...");
     Dajaxice.microsip_web.apps.inventarios.get_existenciasarticulo_byclave(mostrar_articulo_byclave,{
       'articulo_clave': $("#id_claveArticulo").val(), 
       'almacen': $("#almacen_nombre").val(), 
       'entrada_id' : $("#entrada_id").val(),
     });
+  }
   else
     $("#id_articulo_text").focus();
 }
@@ -454,7 +461,6 @@ if (Modernizr.localstorage)
 else
 {
   $("#chbx_modorapido").attr('checked', true);
-  $('#id_ajusteprimerconteo').attr("checked", false);
 }
 
 
@@ -472,10 +478,3 @@ else
 //     localStorage.setItem("modo_rapido_ajustes", 'true');
 
 // });
-
-$('#id_ajusteprimerconteo').on("click", function(){
-  if ($('#id_ajusteprimerconteo').attr('checked') == 'checked')
-    localStorage.setItem("ajustar_primerconteo", 'true');
-  else
-    localStorage.setItem("ajustar_primerconteo", 'false');
-});
