@@ -31,6 +31,7 @@
 {% block breadcrumb %}{% endblock %}
 {% block content %}
 <form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>{% csrf_token %}
+{{articulo_form.errors }}
 <ul id="myTab" class="nav nav-tabs " style="margin-bottom: 0;">
   <li class="active"><a href="#general" data-toggle="tab">General</a></li>
   <li class=""><a href="#ventas" data-toggle="tab">Ventas</a></li>
