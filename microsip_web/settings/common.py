@@ -13,7 +13,6 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-
 DATABASE_ROUTERS = ['microsip_web.libs.custom_db.databases_routers.MainRouter']
 MICROSIP_DATABASES = {}
 DATABASES = {
@@ -162,12 +161,15 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'microsip_web.libs.custom_db.middleware.CustomerMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.middleware.cache.CacheMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )

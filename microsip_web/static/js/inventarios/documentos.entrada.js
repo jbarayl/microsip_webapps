@@ -1,4 +1,4 @@
-
+var seleccionar_articulo;
 
 function calcular_total_ventas()
 {
@@ -11,10 +11,14 @@ function calcular_total_ventas()
 }
 
 
-$("input[name*='claveArticulo']").InputClaveArticulo({
+
+seleccionar_articulo = $("input[name*='claveArticulo']").InputClaveArticulo({
   searchFunction : Dajaxice.microsip_web.apps.inventarios.get_articulo_byclave,
-  clavecommun_name: 'claveArticulo'
+  clavecommun_name: 'claveArticulo',
+  get_detailsFunction: Dajaxice.microsip_web.apps.inventarios.get_detallesarticulo_byid,
+  load_detailsFunction: cargar_detallesarticulo
 });
+seleccionar_articulo = seleccionar_articulo.seleccionar_articulo;
 
 $("input[name*='unidades'], input[name*='costo_total']").live('keydown', function(e) { 
   var keyCode = e.keyCode || e.which; 
@@ -32,7 +36,7 @@ $("input[name*='unidades'], input[name*='costo_unitario']").on("change", functio
   
   costo_total = unidades_obj.val() * costo_unitario_obj.val();
 
-  costo_total_obj.val(costo_total);
+  costo_total_obj.val(costo_total.toFixed(2));
 });
 
 
@@ -57,16 +61,18 @@ function cargar_detallesarticulo(data)
 {
 	if (data.articulo_seguimiento == 'S')
 		alert("articulo con serie no soportado");
+
 	var costo_unitario = $("input[name='"+data.comun_name+"costo_unitario']"); 
 	var unidades = $("input[name='"+data.comun_name+"unidades']");
 	var input_clavearticulo = $("input[name='"+data.comun_name+"claveArticulo']"); 
+	var input_costototal = $("input[name='"+data.comun_name+"costo_total']"); 
 	input_clavearticulo.val(data.articulo_clave);
 
-	costo_unitario.val(data.articulo_costoultimacompra)
-	unidades.val('');
-	unidades.focus();
+	costo_unitario.val(data.articulo_costoultimacompra);
+	input_costototal.val(data.articulo_costoultimacompra);
+	unidades.val(1);
+	unidades.select();
 }
-
 
 $("select[name*='articulo']").change(function(){
 
@@ -75,7 +81,7 @@ $("select[name*='articulo']").change(function(){
 	
 	if (articulo_id != undefined)
 	{
-		var clave_articulo = $("input[name='"+data.comun_name+"claveArticulo']");
+		var clave_articulo = $("input[name='"+comun_name+"claveArticulo']").val();
 		Dajaxice.microsip_web.apps.inventarios.get_detallesarticulo_byid( cargar_detallesarticulo, { 
 				'articulo_id': articulo_id,
 				'comun_name': comun_name,
@@ -94,6 +100,8 @@ $("input[name*='unidades']:last").live('keydown', function(e) {
   	}
 	
 });
+
+$("input[id*='fecha']").datepicker({dateFormat:'dd/mm/yy',});
 
 
 
