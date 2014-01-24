@@ -139,6 +139,7 @@ microsip_web/urls/*.py
 requirements/dev.*
 microsip_web/data/USERS.sqlite
 microsip_web/data/LOGIN.FDB
+microsip_web/data/plugins/
 # Packages
 *.egg
 *.egg-info
