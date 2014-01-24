@@ -10,8 +10,7 @@
 {% block breadcrumb %}{{ block.super }} Preferencias{% endblock %}
 {% block content %}
 <form method="post" action="" width="300px"  enctype='multipart/form-data'>{% csrf_token %}
-  {{ form.errors }}
-  {{ generalform.errors }}
+  
   {% if msg %}
   <div class="alert alert-success fade in">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -27,12 +26,7 @@
   </ul>
   <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade active in" id="general" style="padding-bottom: 0;">
-      <fieldset>
-        <legend>Otros</legend> 
-        <div class='span4'>
-          <strong> Almacen clon</strong> {{ generalform.almacen_clon }}
-        </div>
-      </fieldset>
+      
     </div>
   </div>
 </form>

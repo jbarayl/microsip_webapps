@@ -5,7 +5,9 @@
 {% block style_css %}{% endblock %}
 
 <!-- JavaScript Code -->
-{% block js_code %}{% endblock %}
+{% block js_code %}
+  <script src="{{STATIC_URL}}js/punto_de_venta/documentos.facturas.js"></script>
+{% endblock %}
 
 {% block breadcrumb %}{{ block.super }} Facturas {% endblock %}
 {% block content %}
@@ -17,6 +19,7 @@
     <tr>
       <th>Folio</th>
       <th>Fecha</th>
+      <!-- <th>Opciones</th> -->
     </tr>
     {% for factura in facturas %}
     <tr>
@@ -28,6 +31,10 @@
         {% endif %}
       </td>
       <td>{{ factura.fecha }}</td>
+      <!-- <td>
+        <input type="hidden" value="{{ factura.id }}" class='factura_id'>
+        {% if factura.aplicado == 'N' %} <a href="" class="btn aplicar_btn">Aplicar</a> {% endif %}
+      </td> -->
     </tr>
     {% endfor %}
 
