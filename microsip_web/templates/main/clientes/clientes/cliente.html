@@ -1,4 +1,5 @@
 {% extends "punto_de_venta/base.html" %}
+{% load punto_de_venta_tags %}
 {% block title %}Cliente{% endblock %}
 
 <!-- CSS Code -->
@@ -54,74 +55,83 @@ $(function() {
 {% block breadcrumb %}{{ block.super }} <a href="/punto_de_venta/clientes/">Clientes</a> <i class=" icon-play"></i> Cliente{% endblock %}
 {% block content %}
 {{ formset }}
-
 <form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>{% csrf_token %}
+  {{articulo_form.errors }}
+  {% if message %}
+  <div class="alert alert-block alert-error fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <h4 class="alert-heading">Oh NO! Ocurio un error!</h4>
+    <p>{{ message }}</p>
+  </div>
+  {% endif %}
   
-  <div id="sic_from" class="container-fluid">
-    <div class="row-fluid">
-      <div class="span3">
-        <div class="container-fluid">
-          <div class="row-fluid">
-            <h3>Clientes</h3>  
+  <div class="row-fluid">
+    <div class="span3"><h3 style="margin:0;"> Cliente </h3> </div>
+    <button type="submit" class="btn"><i class="icon-download-alt"></i> Guardar</button> 
+    <a href="#" class="btn disabled"><i class="icon-trash"></i></a> 
+  </div>
+  {{ form.errors }}
+  <ul id="myTab" class="nav nav-tabs " style="margin-bottom: 0;">
+    <li class="active"><a href="#general" data-toggle="tab">General</a></li>
+    {% puntos_tab %}
+  </ul>
+  <div id="myTabContent" class="tab-content">
+    <div class="tab-pane fade active in" id="general" style="padding-bottom: 0;">
+      <div class="row-fluid">
+        <div class="span4" >
+          <label>Nombre</label>
+          <div class="input-prepend input-append">
+            {{ form.nombre }}
           </div>
         </div>
+        <div class="span4" >
+          <label>Tipo Cliente</label>
+          <div class="input-prepend input-append">
+            {{ form.tipo_cliente }}
+          </div>
+        </div>
+
       </div>
-      <div class="span9">
-        <div id='main_form'>
-          <button type="submit" class="btn" ><i class="icon-download-alt"></i> Guardar</button>
+      <br>
+      <br>
+    </div>
+    <div class="tab-pane fade in" id="puntos" style="padding-bottom: 0;">
+      <div class="row-fluid">
+        <div class="span4" style='clear:both;'>
+          <label>Cobrar y Abonar con</label>
+          <div class="input-prepend input-append">
+            {{ form.tipo_tarjeta }}
+          </div>
+        </div>
+        <div class="span4">
+          <label>Dar puntos a</label>
+          <div class="input-prepend input-append" >
+            {{ form.hereda_puntos_a }}
+          </div>
+        </div>
+        <div  id='div_valor_puntos'>
+          <label >Hereda valor de puntos  {{ form.hereda_valorpuntos }}</label>
+          <div class="input-prepend input-append" style='clear:both;' >
+            {{ form.valor_puntos }}
+          </div>
+        </div>
+        <div class="span4"style='clear:both;' >
+          <label>Puntos</label>
+          <div class="input-prepend input-append">
+            {{ form.puntos }}
+          </div>
+        </div>
+        <div class="span4" >
+          <label>Dinero Elecronico</label>
+          <div class="input-prepend input-append">
+            {{ form.dinero_electronico }}
+          </div>
         </div>
       </div>
     </div>
   </div>
-  {{ form.errors }}
-  <fieldset style='clear:both;'>
-    <legend>Informacion General</legend>
-    <div class="span4" >
-      <label>Nombre</label>
-      <div class="input-prepend input-append">
-        {{ form.nombre }}
-      </div>
-    </div>
-    <div class="span4" >
-      <label>Tipo Cliente</label>
-      <div class="input-prepend input-append">
-        {{ form.tipo_cliente }}
-      </div>
-    </div>
-  </fieldset>
-  <fieldset style='clear:both;'>
-    <legend>Informacion de Puntos</legend>
-    <div class="span4" style='clear:both;'>
-      <label>Cobrar y Abonar con</label>
-      <div class="input-prepend input-append">
-        {{ form.tipo_tarjeta }}
-      </div>
-    </div>
-    <div class="span4">
-      <label>Dar puntos a</label>
-      <div class="input-prepend input-append" >
-        {{ form.hereda_puntos_a }}
-      </div>
-    </div>
-    <div  id='div_valor_puntos'>
-      <label >Hereda valor de puntos  {{ form.hereda_valorpuntos }}</label>
-      <div class="input-prepend input-append" style='clear:both;' >
-        {{ form.valor_puntos }}
-      </div>
-    </div>
-    <div class="span4"style='clear:both;' >
-      <label>Puntos</label>
-      <div class="input-prepend input-append">
-        {{ form.puntos }}
-      </div>
-    </div>
-    <div class="span4" >
-      <label>Dinero Elecronico</label>
-      <div class="input-prepend input-append">
-        {{ form.dinero_electronico }}
-      </div>
-    </div>
-  </fieldset>
+</form>
+  
   <!-- <fieldset style='clear:both;'>
     <legend>Cuentas contables de Ventas</legend>
     {% for key, value in cuentas.items %}
@@ -147,14 +157,8 @@ $(function() {
     </div>  
     {% endfor %}
   </fieldset> -->
-  {% if message %}
-  <div class="alert alert-block alert-error fade in">
-    <button type="button" class="close" data-dismiss="alert">×</button>
-    <h4 class="alert-heading">Oh NO! Ocurio un error!</h4>
-    <p>{{ message }}</p>
-  </div>
-  {% endif %}
   
-</form>
+  
+
 
 {% endblock %}
