@@ -29,24 +29,43 @@
   <div id="myTabContent" class="tab-content">
     <div class="tab-pane fade active in" id="general" style="padding-bottom: 0;">
       
-        <div class="fluid" >
+        <div class="row-fluid" >
           <label>Nombre</label>
           <div class="input-prepend input-append">
             {{ form.nombre }}
           </div>
         </div>
-        <div class="fluid" >
-          <label>Tipo de impuesto</label>
-          <div class="input-prepend input-append">
-            {{ form.tipoImpuesto }}
+        <div class="row-fluid" >
+          <div class='span2'>
+            <label>Tipo de impuesto</label>
+            <div class="input-prepend input-append">
+              {{ form.tipoImpuesto }}
+            </div>
+          </div>
+          <div class='span3'>
+            <label>Tipo de IVA</label>
+            <div class="input-prepend input-append">
+              {{ form.tipo_iva }}
+            </div>
           </div>
         </div>
+        <div class="row-fluid" style='clear:both;'>
+          <label>Tipo de calculo</label>
+          <div class="input-prepend input-append">
+            {{ form.tipo_calculo }}
+          </div>
+        </div>
+        
         <div class="fluid" >
-          <label>Porcentaje</label>
+          <label>Tasa (%)</label>
           <div class="input-prepend input-append">
             {{ form.porcentaje }}
           </div>
         </div>
+        <div class="fluid" >
+          
+        </div>
+        
       
         <div class="fluid">
           <label>Es predeterminado</label>
