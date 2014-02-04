@@ -23,6 +23,7 @@ DATABASES = {
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ATOMIC_REQUESTS': True,
     },
 }
 try:
@@ -59,6 +60,7 @@ try:
                 'HOST': host,                      # Set to empty string for localhost. Not used with sqlite3.
                 'PORT': '3050',                      # Set to empty string for default. Not used with sqlite3.
                 'OPTIONS' : {'charset':'ISO8859_1'},
+                'ATOMIC_REQUESTS': True,
             }
 
             for empresa in empresas_rows:                
@@ -75,6 +77,7 @@ try:
                         'HOST': host,                      # Set to empty string for localhost. Not used with sqlite3.
                         'PORT': '3050',                      # Set to empty string for default. Not used with sqlite3.
                         'OPTIONS' : {'charset':'ISO8859_1'},
+                        'ATOMIC_REQUESTS': True,
                     }
 
                     DATABASES['%s-%s'%(conexion_id, empresa[0].replace(' ','_'))] = {
@@ -85,6 +88,7 @@ try:
                         'HOST': host,                      # Set to empty string for localhost. Not used with sqlite3.
                         'PORT': '3050',                      # Set to empty string for default. Not used with sqlite3.
                         'OPTIONS' : {'charset':'ISO8859_1'},
+                        'ATOMIC_REQUESTS': True,
                     }
             
 

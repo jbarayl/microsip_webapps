@@ -1,4 +1,4 @@
-{% extends "punto_de_venta/base.html" %}
+{% extends extend %}
 {% block title %}clientes{% endblock %}
 
 <!-- CSS Code -->
@@ -18,8 +18,8 @@
 {% block content %}
 <form method="post" class="form-inline" action="" enctype='multipart/form-data'>{% csrf_token %}  
   <div class="row-fluid">
-    <div class="span3"><h3 style="margin:0;"> Clientes</h3> </div>
-   
+    <div class="span2"><h3 style="margin:0;"> Clientes</h3> </div>
+    <div class='span1' ><a href="/{{ modulo }}/cliente/" class="btn"> Nuevo</a></div>
     <div class='span2' >
        {{ filtro_form.cliente }}
     </div>
@@ -54,7 +54,7 @@
       </div>
     </div>
     <tr>
-      <td><a href="/punto_de_venta/cliente/{{ cliente.id }}/">{{ cliente.nombre }}</a></td>
+      <td><a href="/{{ modulo }}/cliente/{{ cliente.id }}/">{{ cliente.nombre }}</a></td>
     
       <!-- <td style="text-align:center;"> -->
         <!-- <a href='#myModal{{ cliente.id}}' data-toggle="modal" class="btn btn-mini btn-danger"><i class="icon-trash"></i></a> -->
