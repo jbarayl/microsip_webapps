@@ -1,4 +1,4 @@
-{% extends "punto_de_venta/base.html" %}
+{% extends extend %}
 {% block title %}lineas articulos{% endblock %}
 
 <!-- CSS Code -->
@@ -20,7 +20,7 @@
     </tr>
     {% for linea_articulos in lineas_articulos%}
     <tr>
-      <td><a href="/punto_de_venta/linea_articulos/{{ linea_articulos.id }}/">{{ linea_articulos.nombre }}</a></td>
+      <td><a href="/{{ modulo }}/linea/{{ linea_articulos.id }}/">{{ linea_articulos.nombre }}</a></td>
     </tr>
     {% endfor %}
 

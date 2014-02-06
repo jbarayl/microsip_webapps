@@ -1,18 +1,15 @@
 
-
-<!--   if (document.location.href.indexOf('ventas') > -1) -->
 {% extends extend %}
-
-
 {% block title %}Articulos{% endblock %}
-
 <!-- CSS Code -->
 {% block style_css %}{% endblock %}
 
 <!-- JavaScript Code -->
 {% block js_code %}
+{% include 'autocomplete_light/static.html' %}
 <script type="text/javascript">
-function cargar_articulos(articulos)
+
+  function cargar_articulos(articulos)
 {
   $('#articulos_table').html('<caption></caption><tr><th><input id="articulos_select_all" name="your_name"  type="checkbox"></th><th>Nombre</th></tr>');
   for (var i = 0; i < articulos.length; i++){
@@ -90,13 +87,15 @@ function cargar_arbol(datos){
 
   }).bind("select_node.jstree", function (event, data) { 
       // `data.rslt.obj` is the jquery extended node that was clicked
-
-      Dajaxice.microsip_web.apps.ventas.get_articulosby_seccion(cargar_articulos, {'carpeta_id': data.rslt.obj.attr("id")});
+      //Dajaxice.microsip_web.apps.ventas.get_articulosby_seccion(cargar_articulos, {'carpeta_id': data.rslt.obj.attr("id")});
     })
     // 2) if not using the UI plugin - the Anchor tags work as expected
     //    so if the anchor has a HREF attirbute - the page will be changed
     //    you can actually prevent the default, etc (normal jquery usage)
-    .delegate("a", "click", function (event, data) { event.preventDefault(); })
+
+    .delegate("a", "click", function (event, data) {
+     event.preventDefault(); 
+    })
     .bind("create.jstree", function (e, data) {
      
      Dajaxice.microsip_web.apps.main.filtros.crear_nodo(function (r) { 
@@ -136,11 +135,25 @@ $(function () {
     }
   });
 });
+  
+Dajaxice.microsip_web.apps.ventas.get_estructura_carpetas(cargar_arbol);
 
-$(document).ready(function() {
-  Dajaxice.microsip_web.apps.ventas.get_estructura_carpetas(cargar_arbol);
+$('#id_articulo_text').focus();
+
+$('#select_article_all').change(function(){
+  if(this.checked)
+    $('[id^="select_article_"]').attr('checked',true);    
+  else
+    $('[id^="select_article_"]').attr('checked',false);    
 });
+
+  
+
+
+
 </script>
+
+
 {% endblock %}
 
 {% block breadcrumb %}{{ block.super }} Articulos {% endblock %}
@@ -154,26 +167,80 @@ $(document).ready(function() {
   </ul>
 </div>
 {% endfor %} -->
- <div class="ms-custom-form container-fluid" >
-  <div class="row-fluid">
-    <div class="span4"><h3>Articulos</h3></div>
-    <div class="span7" style=" margin-top: 15px; margin-left: 4em; ">
-      <a tabindex="-1" class='btn' href='#' onclick='cargar_selector_movera();'><i class="icon-folder-open"></i> Mover a</a>  
-    </div>
-  </div>
+{% if msg %}
+<div class="alert alert-block fade in">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    <strong>{{ msg }}</strong> 
 </div>
+{% endif %}
+<form method="post" id="form-search-articulo" class="form-inline" action="" enctype='multipart/form-data'>{% csrf_token %}  
+  <div class="row-fluid">
+    <div class="span3"><h3 style="margin:0;"> Articulos</h3> </div>
+    <div class="span1 hidden-phone">
+     <a tabindex="-1" class='btn' href='#' onclick='cargar_selector_movera();'><i class="icon-folder-open"></i></a> 
+    </div>
+    <div class='span2' >
+       {{ filtro_form.articulo }}
+    </div>
+    <div class="input-prepend input-append mobile_inputdata">
+       <span class="add-on visible-phone label-data">Clave</span>
+       {{ filtro_form.clave }}
+    </div>
+    <div class="input-prepend input-append mobile_inputdata">
+       <span class="label-data add-on visible-phone">Nombre</span>
+       {{ filtro_form.nombre }}
+    </div>
+    <button class="btn" type="submit"><i class='icon-search'></i> <span class="visible-phone">Ir</span></button>
+  </div>
+</form>  
 <div class="container-fluid" style='clear:both;'>
   <div class="row-fluid">
-    <div class="span4">
-      <div class="input-append">
+    <div class="span2 hidden-phone">
+      <!-- <div class="input-append span">
         <input name="nombre" class='input-medium'  maxlength="100" placeholder="Busca una carpeta aqui..." type="text" id="text">
         <a class='btn' id="search"  href="#"><i class='icon-search'></i></a>
         <a class='btn' id="clear_search"  href="#"><i class=' icon-remove'></i></a>
-      </div>
+      </div> -->
       <div id="demo1" class="span"></div>
     </div>
-    <div class="span7" style=" margin-left: 4em; ">
-      <table id='articulos_table'></table>
+
+    <div class="span10">
+      <table class="table tableCell table-hover">
+        <tr>
+          <th class="hidden-phone"> <input id="select_article_all" value="" type="checkbox"/> </th>
+          <th> Articulo</th>
+          <!-- {% if  modulo == '/punto_de_venta/articulo/' %}
+          <th class="hidden-phone"> Puntos</th>
+          <th class="hidden-phone"> Dinero Electronico</th>
+          {% endif %} -->
+        </tr>
+        {% for articulo in articulos%}
+        <tr>
+          <td class="hidden-phone"><input id="select_article_{{ articulo.id }}" value="" type="checkbox"/></td>
+          <td><a href="/{{ modulo}}/articulo/{{ articulo.id }}/">{{ articulo.nombre }}</a></td>
+         <!--  {% if  modulo == '/punto_de_venta/articulo/' %}
+            <td class="hidden-phone">{{articulo.puntos }}|{{articulo.carpeta.id }}</td>
+            <td class="hidden-phone">{{articulo.dinero_electronico }}</td>
+          {% endif %} -->
+         </tr>
+        {% endfor %}
+
+        <div class="pagination pagination-mini mainmenu">
+          <ul>
+            {% if articulos.has_previous %}
+            <li><a href="?page={{ articulos.previous_page_number }}">Anterior</a></li>
+            {% else %}
+            <li class="disabled"><a href="#">Anterior</a></li>
+            {% endif %}
+            <li class="disabled"><a href="#">Pagina {{ articulos.number }} de {{ articulos.paginator.num_pages }}.</a></li>
+            {% if articulos.has_next %}
+            <li><a href="?page={{ articulos.next_page_number }}">Siguiente</a></li>
+            {% else %}
+            <li class="disabled"><a href="#">Siguiente</a></li>
+            {% endif %} 
+          </ul>
+        </div>
+      </table>
     </div>
   </div>
 </div>
@@ -190,52 +257,5 @@ $(document).ready(function() {
     <a class='btn' href="">Aceptar</a>
   </div>
 </div>
-<!-- <table class="table tableCell table-hover">
-    <tr>
-      <th>Nombre</th>
-      <th>Puntos</th>
-      <th>Dinero Electronico</th>
-      <th>Opciones</th>
-    </tr>
-    {% for articulo in articulos%}
-    <div id="myModal{{ articulo.id}}" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3 id="myModalLabel">Seguro que Deseas Eliminar</h3>
-      </div>
-      <div class="modal-body">
-        <h4>Al eliminar el articulo</h4>
-        <p style="color:red;">Ya no sera posible recuperar los datos del articulo</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal">Cancelar</button>
-        <a href="#" class="btn btn-primary">Estoy Seguro</a>
-      </div>
-    </div>
-    <tr>
-      <td><a href="/punto_de_venta/articulo/{{ articulo.id }}/">{{ articulo.nombre }}</a></td>
-      <td>{{articulo.puntos }}</td>
-      <td>{{articulo.dinero_electronico }}</td>
-      <td style="text-align:center;">
-      </td>
-    </tr>
-    {% endfor %}
-
-    <div class="pagination pagination-mini mainmenu">
-      <ul>
-        {% if articulos.has_previous %}
-        <li><a href="?page={{ articulos.previous_page_number }}">Anterior</a></li>
-        {% else %}
-        <li class="disabled"><a href="#">Anterior</a></li>
-        {% endif %}
-        <li class="disabled"><a href="#">Pagina {{ articulos.number }} de {{ articulos.paginator.num_pages }}.</a></li>
-        {% if articulos.has_next %}
-        <li><a href="?page={{ articulos.next_page_number }}">Siguiente</a></li>
-        {% else %}
-        <li class="disabled"><a href="#">Siguiente</a></li>
-        {% endif %} 
-      </ul>
-    </div>
-</table> -->
 <br>
 {% endblock %}

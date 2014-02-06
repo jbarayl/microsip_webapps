@@ -1,4 +1,4 @@
-{% extends "punto_de_venta/base.html" %}
+{% extends extend %}
 {% block title %}Grupos Lineas{% endblock %}
 
 <!-- CSS Code -->
@@ -19,7 +19,7 @@
     </tr>
     {% for grupo_lineas in grupos_lineas%}
     <tr>
-      <td><a href="/punto_de_venta/grupo_lineas/{{ grupo_lineas.id }}/">{{ grupo_lineas.nombre }}</a></td>
+      <td><a href="/{{ modulo }}/grupo/{{ grupo_lineas.id }}/">{{ grupo_lineas.nombre }}</a></td>
     </tr>
     {% endfor %}
 

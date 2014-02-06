@@ -31,6 +31,7 @@
 {% block content %}
 <form method="post" class="form-horizontal" action="" width="300px"  enctype='multipart/form-data'>{% csrf_token %}
   {{articulo_form.errors }}
+  {% block errors %}{% endblock %}
   <div class="row-fluid">
     <div class="span3"><h3 style="margin:0;"> Articulo </h3> </div>
     <button type="submit" class="btn"><i class="icon-download-alt"></i> Guardar</button> 
@@ -54,7 +55,7 @@
           {{articulo_form.unidad_venta }}
           <label>Unidad de compra</label>
           {{articulo_form.unidad_compra }}
-          <label>Costo ultima compra</label>
+          <label>Ultimo Costo</label>
           {{ articulo_form.costo_ultima_compra }}
         </span>
         <span class='span8'>
