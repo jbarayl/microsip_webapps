@@ -10,6 +10,7 @@ echo 			==================================
 echo.
 echo.
 
+pip install git+https://github.com/jesusmaherrera/django-microsip-api.git
 git update-index --assume-unchanged microsip_web/settings/local_settings.py
 git pull origin master
 git gc
