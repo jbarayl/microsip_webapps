@@ -4,7 +4,7 @@
 import os
 import fdb
 import sqlite3
-from local_settings import MICROSIP_MODULES
+from local_settings import MICROSIP_MODULES, MICROSIP_PLUGINS
 
 RUTA_PROYECTO =os.path.dirname(os.path.realpath(__file__)).strip('settings')
 DIR = os.path.abspath(os.path.dirname(__file__))
@@ -195,7 +195,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages'
+    'django.contrib.messages.context_processors.messages',
+    'microsip_web.apps.ventas.context_processors.menu',
 )
 
 # A sample logging configuration. The only tangible logging

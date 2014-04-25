@@ -17,12 +17,14 @@
 </div>
 <table class="table tableCell table-hover">
     <tr>
+      <th></th>
       <th>Folio</th>
       <th>Fecha</th>
       <th>Cliente</th>
     </tr>
     {% for documento in documentos %}
     <tr>
+      <td><input type="checkbox" name="seleccion" value="{{ documento.id }}"></td>
       <td>
         {% if documento.estado = "C" %}
         <a href="/ventas/remision/{{ documento.id }}/" class="text-error" >{{ documento.folio }}</a>
