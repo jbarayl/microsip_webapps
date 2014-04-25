@@ -20,3 +20,7 @@ MICROSIP_MODULES = (
      # 'microsip_web.apps.punto_de_venta',    
      # 'microsip_web.apps.punto_de_venta.puntos',
 )
+
+MICROSIP_PLUGINS = (
+    # 'app': 'microsip_web.plugins.plugin_name',
+)
