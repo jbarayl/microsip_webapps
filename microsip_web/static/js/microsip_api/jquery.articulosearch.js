@@ -27,7 +27,6 @@
         articulo.html('<option selected="selected" value="'+data.articulo_id+'"></option>');
         articulo_text.hide();
         if ( typeof(settings.get_detailsFunction) == "function" && typeof(settings.load_detailsFunction) == "function"){
-          debugger;
           settings.get_detailsFunction(settings.load_detailsFunction, {
             'articulo_id': data.articulo_id,
             'comun_name': data.comun_name,
