@@ -34,7 +34,6 @@ $(function() {
 {% block content %}
 <form method="post" action="" enctype='multipart/form-data'>{% csrf_token %}
 {{ documento_form.errors }}
-{{ pedimento_form.errors }}
 {% if message %}
 <div class="alert alert-success fade in">
     <button type="button" class="close" data-dismiss="alert">×</button>
@@ -72,37 +71,6 @@ $(function() {
             <div class="row">
               <span class='span2'>Almacen</span>
               {{ documento_form.almacen }}
-            </div>
-            <div class="row">
-              
-              {% if proveedor_es_extranjero %} <button class="btn btn-default" data-toggle="modal" data-target="#modal_pedimento">Pedimento</button> {% endif  %}
-              <div class="modal hide fade" id="modal_pedimento">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only"></span></button>
-                      <h4 class="modal-title">Pedimento</h4>
-                    </div>
-                    <div class="modal-body">
-                      <div class="span4">
-                        <label for="pedimento_numero" >Numero</label>
-                        {{ pedimento_form.clave }}
-                      </div>
-                      <div class="span3">
-                        <label for="pedimento_fecha" >Fecha</label>
-                        {{ pedimento_form.fecha }}
-                      </div>
-                      <div class="span3">
-                        <label for="pedimento_fecha" >Aduana</label>
-                        {{ pedimento_form.aduana }}
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
-                    </div>
-                  </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-              </div>
             </div>
           </div>
         </div>
